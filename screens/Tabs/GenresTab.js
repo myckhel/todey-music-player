@@ -36,9 +36,9 @@ class GenresTab extends PureComponent {
      }, 2000)
    }
 
-   componentWillMount = () => {
+   // componentWillMount = () => {
     // console.log('artist');
-   }
+   // }
 
    componentWillReceiveProps = (next, last) => {
      if (last !== next) {

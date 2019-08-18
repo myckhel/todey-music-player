@@ -10,7 +10,7 @@ class Artist extends Base {
   }
 
   append = () => {
-    const items = this.artists
+    const items = this[this.name]
 
     items.map((item) => {
       item.genreCount = genres(item.songs).count()
@@ -18,7 +18,7 @@ class Artist extends Base {
       item.rating = rating().count('artist', item)
     })
 
-    this.artists = items
+    this[this.name] = items
   }
 }
 

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import FastImage from 'react-native-fast-image'
+import FastImage from 'react-native-fast-image'
 
 import TabBarIconI, { TabBarIconE, TabBarIconM } from '../../components/TabBarIcon';
 // import { Ionicons, Entypo } from '@expo/vector-icons';
@@ -19,17 +19,9 @@ export default class Item extends PureComponent {
     super(props)
   }
   render (){
-    const {cover, index, onPress, title, artist, paused, playing, togglePlay, Meta, rating} = this.props
+    const {cover, path, index, onPress, title, artist, author, paused, playing, togglePlay, Meta, rating} = this.props
 
     let src = require(`../../assets/images/covers/Asa.jpg`)
-    switch (cover) {
-      case 'Adele.jpg':
-        src = require(`../../assets/images/covers/Adele.jpg`)
-        break;
-      case 'AKON.jpg':
-        src = require(`../../assets/images/covers/AKON.jpg`)
-        break;
-    }
 
     return (
       <TouchableOpacity
@@ -39,14 +31,14 @@ export default class Item extends PureComponent {
         {typeof cover === "function" ? (
           cover()
         ) : (
-          <Image
+          <FastImage
             style={styles.img}
-            source={src} />
+            source={cover ? {uri: cover} : src} />
         )}
         </View>
         <View style={styles.overview}>
           {/*<View></View>*/}
-          <Text style={styles.title}>{title} {artist && <Text style={styles.artist}> - {artist}</Text>}</Text>
+          <Text style={styles.title}>{title} {(artist || author) && <Text style={styles.artist}> - {artist || author}</Text>}</Text>
           <View style={styles.metaContainer}>
           {typeof Meta === 'function' && (<Meta style={styles.metaItem} />)}
             <View style={styles.metaItem}>
@@ -69,7 +61,7 @@ export default class Item extends PureComponent {
   }
 }
 
-export const NowPlaying = ({src, title, artist, togglePlay, paused, elapsed}) => {
+export const NowPlaying = ({src, title, artist, author, togglePlay, paused, elapsed}) => {
   src = require(`../../assets/images/covers/AKON.jpg`)
   return (
     <View style={styles.container}>
@@ -81,7 +73,7 @@ export const NowPlaying = ({src, title, artist, togglePlay, paused, elapsed}) =>
       <View style={styles.overview}>
         {/*<View></View>*/}
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.artist}>{artist}</Text>
+        <Text style={styles.artist}>{artist || author}</Text>
         {/*<View></View>*/}
       </View>
       <View style={{flexDirection: 'row', marginLeft: 'auto'}}>

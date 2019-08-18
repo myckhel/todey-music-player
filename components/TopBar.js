@@ -29,7 +29,7 @@ export const TopBar = ({ navigation, title }) => (
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
     backgroundColor: color.primary,
     flexDirection: 'row',
     borderBottomWidth: 2,

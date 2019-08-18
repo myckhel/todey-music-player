@@ -1,7 +1,7 @@
 import React from 'react';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 console.log(Entypo);
 import Colors from '../constants/Colors';
 
