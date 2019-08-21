@@ -19,7 +19,7 @@ export default class Item extends PureComponent {
     super(props)
   }
   render (){
-    const {cover, path, index, onPress, title, artist, author, paused, playing, togglePlay, Meta, rating} = this.props
+    const {cover, path, index, onPress, title, artist, author, paused, fileName, playing, togglePlay, Meta, rating} = this.props
 
     let src = require(`../../assets/images/covers/Asa.jpg`)
 
@@ -38,7 +38,7 @@ export default class Item extends PureComponent {
         </View>
         <View style={styles.overview}>
           {/*<View></View>*/}
-          <Text style={styles.title}>{title} {(artist || author) && <Text style={styles.artist}> - {artist || author}</Text>}</Text>
+          <Text style={styles.title}>{title} {(artist || author || fileName) && <Text style={styles.artist}> - {artist || author || fileName}</Text>}</Text>
           <View style={styles.metaContainer}>
           {typeof Meta === 'function' && (<Meta style={styles.metaItem} />)}
             <View style={styles.metaItem}>
@@ -61,19 +61,21 @@ export default class Item extends PureComponent {
   }
 }
 
-export const NowPlaying = ({src, title, artist, author, togglePlay, paused, elapsed}) => {
+export const NowPlaying = ({src, title, artist, author, fileName, togglePlay, paused, elapsed, onPress, cover}) => {
   src = require(`../../assets/images/covers/AKON.jpg`)
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      onPress={() => onPress()}
+      style={styles.container} >
       <View style={styles.imgWrapper}>
         <Image
           style={styles.img}
-          source={src} />
+          source={cover ? {uri: cover} : src} />
       </View>
       <View style={styles.overview}>
         {/*<View></View>*/}
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.artist}>{artist || author}</Text>
+        <Text style={styles.artist}>{artist || author || fileName}</Text>
         {/*<View></View>*/}
       </View>
       <View style={{flexDirection: 'row', marginLeft: 'auto'}}>
@@ -84,7 +86,7 @@ export const NowPlaying = ({src, title, artist, author, togglePlay, paused, elap
           <TabBarIconI name={paused ? "md-play" : "md-pause"} style={styles.playIcon} />
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

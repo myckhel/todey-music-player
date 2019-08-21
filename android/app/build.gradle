@@ -188,7 +188,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-vector-icons')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
@@ -208,4 +207,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
+project.ext.vectoricons = [
+	iconFontNames: ['MaterialCommunityIcons.ttf', 'Ionicons.ttf', 'Entypo.ttf']
+]
+
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle"); 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

@@ -5,6 +5,7 @@ export const CHANGE_LOCALE = 'CHANGE_LOCALE';
 export const LOAD_MUSIC = 'LOAD_MUSIC'
 export const LOADING_MUSIC = 'LOADING_MUSIC'
 export const TOGGLE_PLAY = 'TOGGLE_PLAY'
+export const PLAY_SONG = 'PLAY_SONG'
 
 /* AUTH */
 export const LOGIN_USER = 'LOGIN_USER';

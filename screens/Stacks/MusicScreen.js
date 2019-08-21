@@ -10,6 +10,8 @@ import {
   View,
 } from 'react-native';
 
+import {NavigationActions} from 'react-navigation';
+
 // components
 import { TopBar } from '../../components/TopBar';
 import color from '../../constants/Colors';
@@ -38,6 +40,14 @@ class MusicScreen extends PureComponent {
       },
     }
   }
+
+   navigateToScreen = (route, params = {}) => {
+     const navigateAction = NavigationActions.navigate({
+       routeName: route,
+       params
+     });
+     this.props.navigation.dispatch(navigateAction);
+   }
 
    toggleCollapsedPlay = () => {
      this.setState(prev => ({collapsedPlay: !prev.collapsedPlay}))
@@ -72,6 +82,7 @@ class MusicScreen extends PureComponent {
 
   render() {
     const { playingProgress, playing, paused, music} = this.props
+    const { cover, author, title, duration  } = this.props.music
     // console.log({ playingProgress, playing, paused, music});
     return (
       <View style={styles.container}>
@@ -99,17 +110,19 @@ class MusicScreen extends PureComponent {
               minimumTrackTintColor={color.primary}
               maximumTrackTintColor='rgba(255,255,255,0.5)'
             />
-          <NowPlaying
+
+          {playing && <NowPlaying
             togglePlay={ () => this.props.togglePlay()}
-            title={music.title}
+            title={title}
             playing={playing}
             paused={paused}
-            cover={'gggg'}
+            cover={cover}
+            onPress={() => {this.navigateToScreen('Playing')}}
             style={{ }}
+            duration={duration}
             elapsed={playingProgress.elapsed}
-            key={1}
-            artist={music.artist}
-          />
+            artist={author}
+          />}
           </View>
         )}
       </View>

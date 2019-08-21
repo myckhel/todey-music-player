@@ -4,7 +4,7 @@ import { Text,
   FlatList,
   RefreshControl,
   TouchableOpacity,
-  // PermissionsAndroid,
+  PermissionsAndroid,
   DeviceEventEmitter,
   Button,
   TextInput,
@@ -21,7 +21,7 @@ import { Text,
  import MusicFiles from 'react-native-get-music-files'
  import Permissions from 'react-native-permissions'
 
-import { loadMusics, loadingMusic } from "../../redux/actions";
+import { loadMusics, loadingMusic, play } from "../../redux/actions";
 import load from "../../func/music/load";
 import { connect } from 'react-redux';
 
@@ -50,10 +50,22 @@ class SongsTab extends PureComponent {
 
     componentDidMount = async () => {
       try {
-        const perm = await this.askPermission()
-        if (perm === 'authorized') {
-          this.getAll()
-        }
+        this.filePermission()
+        Permissions.checkMultiple(['storage'])
+        .then( async (res) => {
+          let perm;
+          if (res.storage === 'authorized') {
+            perm = res.storage
+          } else {
+            perm = await this.askPermission()
+          }
+          if (perm === 'authorized') {
+            this.getAll()
+          }
+        }).catch((e) => {
+          console.log(e);
+        })
+
       } catch (e) {
         console.log(e);
       }
@@ -88,6 +100,29 @@ class SongsTab extends PureComponent {
       // await this.startPlay()
     }
 
+    filePermission = async () => {
+      try {
+        const granted = await PermissionsAndroid.requestMultiple(
+          [PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE],
+          {
+            title: "We need storage permissions",
+            message: "waiting",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonNeutral: "Accept",
+          }
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log(granted, 'yes');
+        } else {
+          console.log(granted);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     getAll = () => {
       MusicFiles.getAll({
         blured: true, // works only when 'cover' is set to true
@@ -98,7 +133,7 @@ class SongsTab extends PureComponent {
         title: true,
         fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
         // minimumSongDuration: 10000, // get songs bigger than 10000 miliseconds duration,
-        batchNumber : 5,
+        batchNumber : 1,
         // delay: 1000
       })
       .then((r) => {
@@ -107,30 +142,6 @@ class SongsTab extends PureComponent {
       })
       .catch(er => alert(JSON.stringify(error)));
     };
-
-    // requestPermission = async () => {
-    //    try {
-    //      const granted = await PermissionsAndroid.requestMultiple(
-    //        [
-    //          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    //          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-    //        ],
-    //        {
-    //          title: "Permission",
-    //          message: "Storage access is requiered",
-    //          buttonPositive: "OK"
-    //        }
-    //      );
-    //      alert(JSON.stringify(granted), PermissionsAndroid.RESULTS.GRANTED);
-    //      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-    //        alert("You can use the package");
-    //      } else {
-    //        // this.requestPermission();
-    //      }
-    //    } catch (err) {
-    //      console.warn(err);
-    //    }
-    //  };
 
    askPermission = async () => {
      return new Promise(function(resolve, reject) {
@@ -153,49 +164,9 @@ class SongsTab extends PureComponent {
      this.props.navigation.dispatch(navigateAction);
    }
 
-   // loadMusic = async () => {
-   //   try {
-   //     await this.props.loadingMusic(true)
-   //     // const musics = await load()
-   //     await this.music()
-   //     // console.log(musics);
-   //     await this.props.loadMusics( musics )
-   //   } catch (e) {
-   //     console.log(e);
-   //   } finally {
-   //     await this.props.loadingMusic(false)
-   //   }
-   // }
-
-   // music = async () => {
-   //   try {
-   //     Permissions.request('storage')
-   //     .then(async (res) => {
-   //       console.log(res);
-   //       if (res) {
-   //         MusicFiles.getAll({
-   //           id: true,
-   //           blured: true,
-   //           artist: true,
-   //           duration: true,
-   //           cover: true,
-   //           title: true,
-   //           batchNumber: 5,
-   //           minimumSongDuration: 10000,
-   //           fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle']
-   //         })
-   //         .then((ms) => {
-   //           console.log(ms);
-   //         })
-   //         .catch((e) => {
-   //           console.log(e);
-   //         })
-   //       }
-   //    })
-   //   } catch (e) {
-   //
-   //   }
-   // }
+   playSong = (song) => {
+     this.props.play(song)
+   }
 
    componentWillReceiveProps = (next, last) => {
      if (last !== next) {
@@ -231,10 +202,20 @@ class SongsTab extends PureComponent {
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />}
-          renderItem={({item, index}) => (<Item onPress={() => this.navigateToScreen('Listable', {items: item})} rating={item.rating} index={index} artist={item.artist || item.author} title={item.title} cover={item.cover} style={{ }} />)}
+          renderItem={({item, index}) => (
+            <Item
+              onPress={() => this.playSong(item)}
+              rating={item.rating} index={index} artist={item.artist || item.author}
+              title={item.title} cover={item.cover} fileName={item.fileName} style={{ }}
+            />
+          )}
           contentContainerStyle={styles.contentContainer} />
       </View>
     )
+
+    playSong = (song) => {
+      this.props.play(song)
+    }
   }
 }
 
@@ -243,19 +224,8 @@ const mapStateToProps = ({ music }) => {
 	return { ...music };
 };
 
-export default connect(mapStateToProps,{ loadMusics, loadingMusic })(SongsTab);
+export default connect(mapStateToProps,{ loadMusics, loadingMusic, play })(SongsTab);
 
-// {musics.map()}
-// {marginLeft: `${this.state.playingProgress}%`}
-
-// SettingsScreen.navigationOptions = {
-//   title: '',
-// };
-
-// SongsTab.navigationOptions = {
-//   title: 'Songs',
-//   header: <TopBar />,
-// }
 const styles = StyleSheet.create({
   containers: {
     flex: 1,

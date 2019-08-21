@@ -18,6 +18,7 @@ import Settings from '../screens/MenuStacks/SettingsStack';
 import Online from '../screens/MenuStacks/OnlineStack';
 import Activity from '../screens/MenuStacks/ActivityStack';
 import About from '../screens/MenuStacks/AboutStack';
+import PlayingScreen from '../screens/Stacks/PlayStack';
 
 import { TopBar } from '../components/TopBar';
 import color from '../constants/Colors';
@@ -31,6 +32,7 @@ const MainStack = createStackNavigator({
   Online: Online,
   Settings: Settings,
   About: About,
+  Playing: {screen: PlayingScreen },
 }, {
   defaultNavigationOptions: ({navigation}) => ({
     headerStyle: {

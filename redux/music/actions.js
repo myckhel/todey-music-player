@@ -1,4 +1,4 @@
-import { LOAD_MUSIC, LOADING_MUSIC, TOGGLE_PLAY } from '../../constants/actionTypes';
+import { LOAD_MUSIC, LOADING_MUSIC, TOGGLE_PLAY, PLAY_SONG } from '../../constants/actionTypes';
 
 export const loadMusics = (musics) => ({
   type: LOAD_MUSIC,
@@ -12,4 +12,9 @@ export const loadingMusic = (bool) => ({
 
 export const togglePlay = () => ({
   type: TOGGLE_PLAY,
+})
+
+export const play = (song) => ({
+  type: PLAY_SONG,
+  payload: song,
 })

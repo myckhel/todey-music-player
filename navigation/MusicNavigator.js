@@ -29,34 +29,39 @@ const defaultNavigationOptions = ({navigation}) => ({
   header: <></>,
 })
 
+const common = createStackNavigator({
+  Listable: { screen: ListableScreen, },
+},{defaultNavigationOptions})
+
 const SongStacks = createStackNavigator({
   Musics: {screen: SongsTab},
-  Listable: { screen: ListableScreen, },
+  common,
 },{ defaultNavigationOptions })
 
 const ArtistStacks = createStackNavigator({
   Artists: {screen: ArtistsTab},
-  Listable: { screen: ListableScreen, },
+  common,
 },{ defaultNavigationOptions })
 
 const AlbumStacks = createStackNavigator({
   Albums: {screen: AlbumsTab},
-  Listable: { screen: ListableScreen, },
+  common,
 },{ defaultNavigationOptions })
 
 const PlaylistStacks = createStackNavigator({
   Playlists: {screen: PlaylistsTab},
-  Listable: { screen: ListableScreen, },
+  common,
 },{ defaultNavigationOptions })
 
 const GenreStacks = createStackNavigator({
   Genres: {screen: GenresTab},
-  Listable: { screen: ListableScreen, },
+  common,
 },{ defaultNavigationOptions })
 
 const RatingStacks = createStackNavigator({
   Ratings: {screen: RatingsTab},
   Listable: { screen: ListableScreen, },
+  common,
 },{ defaultNavigationOptions })
 
 

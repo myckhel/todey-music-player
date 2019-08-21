@@ -1,5 +1,5 @@
 import {
-  LOAD_MUSIC, LOADING_MUSIC, TOGGLE_PLAY
+  LOAD_MUSIC, LOADING_MUSIC, TOGGLE_PLAY, PLAY_SONG
 } from "../../constants/actionTypes";
 import storeArtists from "../../func/music/artist";
 import storeAlbums from "../../func/music/album";
@@ -16,11 +16,9 @@ const INIT_STATE = {
   genre: {},
   loading: true,
   playing: {
-    music: {
-      artist: 'Blade',
-      title: 'Player',
-    },
-    playing: true,
+    music: {},
+    inPlay: false,
+    playing: false,
     paused: false,
     collapsedPlay: false,
     playingProgress:{
@@ -49,6 +47,8 @@ export default (state = INIT_STATE, action) => {
       return merge(state, {loading: action.payload});
     case TOGGLE_PLAY:
       return merge(state, {playing: merge(state.playing, {paused: !state.playing.paused} ) } );
+    case PLAY_SONG:
+      return merge(state, {playing: merge(state.playing,  {music: action.payload, inPlay: true, playing: true}) } );
     default:
       return { ...state };
   }
