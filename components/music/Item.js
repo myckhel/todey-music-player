@@ -29,7 +29,7 @@ export default class Item extends PureComponent {
         style={styles.container}>
         <View style={styles.imgWrapper}>
         {typeof cover === "function" ? (
-          cover()
+          cover({style: styles.img})
         ) : (
           <FastImage
             style={styles.img}

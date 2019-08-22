@@ -41,13 +41,14 @@ class ArtistsTab extends PureComponent {
     // console.log('artist');
    // }
 
-   componentWillReceiveProps = (next, last) => {
+   static getDerivedStateFromProps = (next, last) => {
      if (last !== next) {
-       this.setState(prev => ({
+       return {
          ...next.artist,
          refreshing: next.loading
-       }))
+       }
      }
+     return null
      // console.log(last, next);
    }
 
@@ -60,15 +61,15 @@ class ArtistsTab extends PureComponent {
    }
 
    render(){
-    const { artists } = this.state
-    // console.log(artists);
+    const { authors } = this.state
+    // console.log(this.state);
     return (
       <View style={styles.container}>
         <FlatList
           shouldItemUpdate={(props,nextProps)=>
           { console.log(props,nextProps); return props.item!==nextProps.item}}
           keyExtractor={(item, index) => `${index}`}
-          data={artists}
+          data={authors}
           disableVirtualization={false}
           initialNumToRender={30}
           style={styles.container}

@@ -18,7 +18,7 @@ import { Text,
  import color from '../../constants/Colors';
  import {NavigationActions} from 'react-navigation';
 
- import MusicFiles from 'react-native-get-music-files'
+ import MusicFiles, { RNAndroidAudioStore } from 'react-native-get-music-files'
  import Permissions from 'react-native-permissions'
 
 import { loadMusics, loadingMusic, play } from "../../redux/actions";
@@ -116,7 +116,7 @@ class SongsTab extends PureComponent {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           console.log(granted, 'yes');
         } else {
-          console.log(granted);
+          console.log(granted, PermissionsAndroid.RESULTS.GRANTED);
         }
       } catch (e) {
         console.log(e);
@@ -125,6 +125,7 @@ class SongsTab extends PureComponent {
 
     getAll = () => {
       MusicFiles.getAll({
+        id: true,
         blured: true, // works only when 'cover' is set to true
         artist: true,
         duration: true, //default : true
@@ -133,14 +134,20 @@ class SongsTab extends PureComponent {
         title: true,
         fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
         // minimumSongDuration: 10000, // get songs bigger than 10000 miliseconds duration,
-        batchNumber : 1,
+        // batchNumber : 1,
         // delay: 1000
       })
-      .then((r) => {
-        alert(JSON.stringify(r))
-        console.log(r);
+      .then( async (m) => {
+        console.log(m);
+        try {
+          await this.props.loadingMusic(true)
+          await this.props.loadMusics([...this.state.musics, ...m])
+        } catch (e) {
+           console.log(e);
+        } finally {
+          await this.props.loadingMusic(false)
+        }
       })
-      .catch(er => alert(JSON.stringify(error)));
     };
 
    askPermission = async () => {
@@ -168,12 +175,12 @@ class SongsTab extends PureComponent {
      this.props.play(song)
    }
 
-   componentWillReceiveProps = (next, last) => {
+   static getDerivedStateFromProps = (next, last) => {
      if (last !== next) {
-       this.setState(prev => ({
+       return {
          musics: next.musics,
          refreshing: next.loading
-       }))
+       }
      }
      // console.log(last, next);
    }
@@ -187,7 +194,7 @@ class SongsTab extends PureComponent {
 
    render(){
     const { musics, playingProgress } = this.state
-    console.log(this.state);
+    // console.log(this.state);
     return (
       <View style={styles.containers}>
         <FlatList

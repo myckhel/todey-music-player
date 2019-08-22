@@ -40,13 +40,16 @@ class AlbumsTab extends PureComponent {
     // console.log('artist');
    // }
 
-   componentWillReceiveProps = (next, last) => {
+   static getDerivedStateFromProps = (next, last) => {
      if (last !== next) {
-       this.setState(prev => ({
+       // this.setState(prev => (
+       return {
          ...next.album,
          refreshing: next.loading
-       }))
+       }
+       // }))
      }
+     return null
      // console.log(last, next);
    }
 

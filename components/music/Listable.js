@@ -20,7 +20,7 @@ export default ({index, title, cover, songCount, rating, albumCount}) => {
         style={style}
         songCount={songCount} />}
       title={title}
-      cover={() => <TabBarIconE name="music" style={[]} />}
+      cover={({style}) => <TabBarIconE name="music" style={[style]} />}
       style={{ }} />
   )
 }

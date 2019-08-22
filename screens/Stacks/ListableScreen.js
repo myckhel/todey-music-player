@@ -31,16 +31,12 @@ class ListableScreen extends PureComponent {
      }, 2000)
    }
 
-   componentWillMount = () => {
-    // console.log('artist');
-   }
-
-   componentWillReceiveProps = (next, last) => {
+   static getDerivedStateFromProps = (next, last) => {
      if (last !== next) {
-       this.setState(prev => ({
+       return {
          ...next.artist,
          refreshing: next.loading
-       }))
+       }
      }
      // console.log(last, next);
    }
@@ -85,7 +81,10 @@ class ListableScreen extends PureComponent {
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />}
-          renderItem={({item, index}) => (<Listable index={index} title={item.title} style={{ }} />)}
+          renderItem={({item, index}) => (
+            <Listable
+              index={index}
+              title={item.title} style={{ }} />)}
           contentContainerStyle={styles.contentContainer} />
       </View>
     )

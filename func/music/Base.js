@@ -19,20 +19,28 @@ export default class Base {
     return this[this.name].length
   }
 
+  nullOrNot = (string) => {
+    if(!string || string === ''){
+      return `unknown ${singularName}`
+    }
+    return string
+  }
+
+
   setUp = () => {
+    singularName = this.name.substr(0,this.name.length-1)
     let items = []
     const names = []
-    const singularName = this.name.substr(0,this.name.length-1)
     this.musics.map((music) => {
-      if (names.includes(music[singularName])) {
-        const index = names.indexOf(music[singularName])
+      if (names.includes(this.nullOrNot(music[singularName]))) {
+        const index = names.indexOf(this.nullOrNot(music[singularName]))
         items[index].songs.push(music)
         items[index].musicCount = items[index].musicCount + 1
       } else {
-        names.push(music[singularName])
+        names.push(this.nullOrNot(music[singularName]))
         items.push({
           songs: [music],
-          title: music[singularName],
+          title: this.nullOrNot(music[singularName]),
           cover: music.cover,
           musicCount: 1,
         })

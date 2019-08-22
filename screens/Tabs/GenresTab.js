@@ -40,13 +40,14 @@ class GenresTab extends PureComponent {
     // console.log('artist');
    // }
 
-   componentWillReceiveProps = (next, last) => {
+   static getDerivedStateFromProps = (next, last) => {
      if (last !== next) {
-       this.setState(prev => ({
+       return {
          ...next.genre,
          refreshing: next.loading
-       }))
+       }
      }
+     return
      // console.log(last, next);
    }
 

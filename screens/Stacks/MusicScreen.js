@@ -54,35 +54,35 @@ class MusicScreen extends PureComponent {
    }
 
    startPlay = async () => {
-     // this.playingTimer = await setInterval(() => {
-     //   this.setState(state=> ({
-     //     playingProgress: {
-     //       ...state.playingProgress,
-     //       elapsed: Math.min((state.playingProgress.elapsed + 0.01).toFixed(2), state.playingProgress.total)
-     //     }
-     //   }))
-     // }, 1000)
+     this.playingTimer = await setInterval(() => {
+       this.setState(state=> ({
+         playingProgress: {
+           ...state.playingProgress,
+           elapsed: Math.min((state.playingProgress.elapsed + 0.01).toFixed(2), state.playingProgress.total)
+         }
+       }))
+     }, 1000)
      console.log('playing');
    }
 
    stopPlay = () => {
-     // clearInterval(this.playingTimer)
-     // this.setState({started: false})
+     clearInterval(this.playingTimer)
+     this.setState({started: false})
      console.log('stop');
    }
 
-  // togglePlay = () => {
-  //   if (this.state.paused) {
-  //     this.startPlay()
-  //   } else {
-  //     this.stopPlay()
-  //   }
-  //   this.setState(prev => ({paused: !prev.paused}))
-  // }
+  togglePlay = () => {
+    if (this.state.paused) {
+      this.startPlay()
+    } else {
+      this.stopPlay()
+    }
+    this.setState(prev => ({paused: !prev.paused}))
+  }
 
   render() {
     const { playingProgress, playing, paused, music} = this.props
-    const { cover, author, title, duration  } = this.props.music
+    const { cover, author, title, duration, fileName  } = this.props.music
     // console.log({ playingProgress, playing, paused, music});
     return (
       <View style={styles.container}>
@@ -119,6 +119,7 @@ class MusicScreen extends PureComponent {
             cover={cover}
             onPress={() => {this.navigateToScreen('Playing')}}
             style={{ }}
+            fileName={fileName}
             duration={duration}
             elapsed={playingProgress.elapsed}
             artist={author}
