@@ -50,7 +50,7 @@ class SongsTab extends PureComponent {
 
     componentDidMount = async () => {
       try {
-        this.filePermission()
+        // this.filePermission()
         Permissions.checkMultiple(['storage'])
         .then( async (res) => {
           let perm;
@@ -75,14 +75,14 @@ class SongsTab extends PureComponent {
          async (params) => {
            // alert(JSON.stringify(params.batch))
            console.log(params);
-           try {
+           // try {
              await this.props.loadingMusic(true)
              await this.props.loadMusics([...this.state.musics, ...params.batch])
-           } catch (e) {
-              console.log(e);
-           } finally {
+           // } catch (e) {
+              // console.log(e);
+           // } finally {
              await this.props.loadingMusic(false)
-           }
+           // }
            // this.setState(prev =>({ musics: [...prev.musics, ...params.batch] }))
          }
        )
@@ -134,11 +134,10 @@ class SongsTab extends PureComponent {
         title: true,
         fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
         // minimumSongDuration: 10000, // get songs bigger than 10000 miliseconds duration,
-        // batchNumber : 1,
+        batchNumber : 1,
         // delay: 1000
       })
       .then( async (m) => {
-        console.log(m);
         try {
           await this.props.loadingMusic(true)
           await this.props.loadMusics([...this.state.musics, ...m])
