@@ -60,7 +60,9 @@ class SongsTab extends PureComponent {
             perm = await this.askPermission()
           }
           if (perm === 'authorized') {
-            this.getAll()
+            // this.getAll()
+            // this.storeAll()
+            this.init()
           }
         }).catch((e) => {
           console.log(e);
@@ -74,7 +76,7 @@ class SongsTab extends PureComponent {
          'onBatchReceived',
          async (params) => {
            // alert(JSON.stringify(params.batch))
-           console.log(params);
+           // console.log(params);
            // try {
              await this.props.loadingMusic(true)
              await this.props.loadMusics([...this.state.musics, ...params.batch])
@@ -149,6 +151,84 @@ class SongsTab extends PureComponent {
       })
     };
 
+    storeAll = () => {
+      // RNAndroidAudioStore.getArtists()
+      // .then((m) => {
+      //   console.log(m);
+      // })
+      // .catch((e) => {
+      //   console.log(e);
+      // })
+      RNAndroidAudioStore.getAll({
+        id: true,
+        blured: true, // works only when 'cover' is set to true
+        artist: true,
+        duration: true, //default : true
+        cover: true, //default : true,
+        genre: true,
+        title: true,
+        fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
+        // minimumSongDuration: 10000, // get songs bigger than 10000 miliseconds duration,
+        batchNumber : 1,
+      })
+      .then( async (m) => {
+        try {
+          await this.props.loadingMusic(true)
+          await this.props.loadMusics([...this.state.musics, ...m])
+        } catch (e) {
+           console.log(e);
+        } finally {
+          await this.props.loadingMusic(false)
+        }
+      })
+    }
+
+    init = async () => {
+      try {
+        await Promise.all([
+          this.getAll(),
+          // this.getAlbums('Asa'),
+          // this.getArtists(),
+          // this.getSongs('Asa'),
+          // this.search('Asa'),
+        ])
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    getAlbums = (artist='') => {
+      RNAndroidAudioStore.getAlbums({ artist : artist })
+        .then(f => {
+          this.setState({ ...this.state, albums: f });
+        })
+        .catch(er => console.log(er));
+    };
+
+    getArtists = () => {
+      RNAndroidAudioStore.getArtists({})
+        .then(f => {
+          this.setState({ ...this.state, artists: f });
+        })
+        .catch(er => console.log(er));
+    };
+
+    getSongs = (artist = '', album = '') => {
+      RNAndroidAudioStore.getSongs({ artist, album })
+        .then(f => {
+          this.setState({ ...this.state, songs: f });
+        })
+        .catch(er => console.log(er));
+    };
+
+    search = searchParam => {
+      RNAndroidAudioStore.search({ searchParam })
+        .then(f => {
+          this.setState({ ...this.state, search: f });
+        })
+        .catch(er => console.log(er));
+    };
+
    askPermission = async () => {
      return new Promise(function(resolve, reject) {
        Permissions.request('storage')
@@ -193,7 +273,7 @@ class SongsTab extends PureComponent {
 
    render(){
     const { musics, playingProgress } = this.state
-    // console.log(this.state);
+    console.log(this.state);
     return (
       <View style={styles.containers}>
         <FlatList
