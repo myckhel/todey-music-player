@@ -15,9 +15,6 @@ import { Text,
  import color from '../../constants/Colors';
 
  import {NavigationActions} from 'react-navigation';
-// import { Audio, Asset } from 'expo';
-//  import { FileSystem } from 'expo-file-system';
-// import artist from "../../func/music/artist";
 
 class ArtistsTab extends PureComponent {
    constructor(props){
@@ -36,10 +33,6 @@ class ArtistsTab extends PureComponent {
        this.setState(prev => ({musics: [...prev.musics], refreshing: false}))
      }, 2000)
    }
-
-   // componentWillMount = () => {
-    // console.log('artist');
-   // }
 
    static getDerivedStateFromProps = (next, last) => {
      if (last !== next) {
@@ -66,8 +59,6 @@ class ArtistsTab extends PureComponent {
     return (
       <View style={styles.container}>
         <FlatList
-          shouldItemUpdate={(props,nextProps)=>
-          { console.log(props,nextProps); return props.item!==nextProps.item}}
           keyExtractor={(item, index) => `${index}`}
           data={authors}
           disableVirtualization={false}
@@ -79,7 +70,7 @@ class ArtistsTab extends PureComponent {
           />}
           renderItem={({item, index}) => (
             <Artist
-              onPress={() => this.navigateToScreen('Listable', {items: item})}
+              onPress={() => this.navigateToScreen('Listable', {items: item, type: 'artist'})}
               genreCount={item.genreCount}
               rating={item.rating}
               index={index}
@@ -102,17 +93,6 @@ const mapStateToProps = ({ music }) => {
 
 export default connect(mapStateToProps,{  })(ArtistsTab);
 
-// {musics.map()}
-// {marginLeft: `${this.state.playingProgress}%`}
-
-// SettingsScreen.navigationOptions = {
-//   title: '',
-// };
-
-// SongsTab.navigationOptions = {
-//   title: 'Songs',
-//   header: <TopBar />,
-// }
 const styles = StyleSheet.create({
   container: {
     flex: 1,

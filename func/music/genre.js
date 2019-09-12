@@ -12,14 +12,10 @@ class Genre extends Base {
   }
 
   append = () => {
-    const items = this.genres
-
-    items.map((item) => {
+    this.genres.map((item) => {
       item.albumCount = albums(item.songs).count()
       item.rating = rating().count('genre', item)
     })
-
-    this.genres = items
   }
 }
 

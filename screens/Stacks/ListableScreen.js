@@ -42,27 +42,35 @@ class ListableScreen extends PureComponent {
    }
 
    componentDidMount = async () => {
-     if (this.props.navigation.state.params) {
-       const items = this.props.navigation.getParam('items')
+     const { getParam } = this.props.navigation
+     const items = getParam('items')
+     const type = getParam('type')
+     if (items) {
        // get lisatble fields
-       await this.setState({items: this.getListableFields(items)})
-       console.log(this.state);
+       await this.setState({item: items, items: this.getListableFields(items, type)})
      }
-     console.log(this.props);
    }
 
-   getListableFields = (data) => {
+   getListableFields = (data, type) => {
      const lists = []
-     const fields = ['albumCount', 'genreCount', 'artistCount', 'songCount', ]
-     fields.map((field) => {
-       if (data[field]) {
-         lists.push({[field]: {
-            "title": data[field],
-          }})
-       }
-     })
+     lists.push({ title: `${data.title}'s Songs` })
+     lists.push({ title: `${data.title}'s Albums` })
+     lists.push({ title: `${data.title}'s Genres` })
      return lists
    }
+
+   // getListableFields = (data) => {
+   //   const lists = []
+   //   const fields = ['albumCount', 'genreCount', 'artistCount', 'songCount', ]
+   //   fields.map((field) => {
+   //     if (data[field]) {
+   //       lists.push({[field]: {
+   //          "title": data[field],
+   //        }})
+   //     }
+   //   })
+   //   return lists
+   // }
 
    render(){
     const { items } = this.state
@@ -70,8 +78,6 @@ class ListableScreen extends PureComponent {
     return (
       <View style={styles.container}>
         <FlatList
-          shouldItemUpdate={(props,nextProps)=>
-          { console.log(props,nextProps); return props.item!==nextProps.item}}
           keyExtractor={(item, index) => `${index}`}
           data={items}
           disableVirtualization={false}

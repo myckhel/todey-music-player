@@ -27,7 +27,7 @@ export default ({index, title, cover, songCount, rating, albumCount}) => {
         style={style}
         albumCount={albumCount}
         songCount={songCount} />}
-      title={title} cover={cover} style={{ }} />
+      title={title} cover={cover} style={{ }} type="genre" />
   )
 }
 

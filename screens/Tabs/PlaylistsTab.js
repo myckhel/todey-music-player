@@ -1,14 +1,18 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 
 export default function PlaylistsTab() {
   /**
    * Go ahead and delete ExpoConfigView and replace it with your content;
    * we just wanted to give you a quick view of your config.
    */
-  return <Text>PlaylistsTab</Text>;
+  return <Text style={styles.container}>PlaylistsTab</Text>;
 }
 
-// SettingsScreen.navigationOptions = {
-//   title: '',
-// };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+})

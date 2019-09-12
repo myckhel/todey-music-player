@@ -10,14 +10,10 @@ class Albums extends Base {
   }
 
   append = () => {
-    const items = this.albums
-
-    items.map((item) => {
+    this.albums.map((item) => {
       item.genreCount = genres(item.songs).count()
       item.rating = rating().count('album', item)
     })
-
-    this.albums = items
   }
 }
 

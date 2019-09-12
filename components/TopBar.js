@@ -46,7 +46,7 @@ export class TopBar extends PureComponent {
     return (
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{}}>
-          <TabBarIconI name="ios-menu" style={[styles.menu]} />
+          <TabBarIconI name="ios-menu" size={20} style={[styles.menu]} />
         </TouchableOpacity>
         {searching
         ? <TextInput
@@ -60,13 +60,13 @@ export class TopBar extends PureComponent {
           <Text style={styles.headerText}>{title ? title : 'Todey Player'}</Text>
         </View>}
         <TouchableOpacity onPress={() => this.toggleSearch()} style={styles.secondaryMenu}>
-          <TabBarIconI name="md-search" style={[styles.menu]} />
+          <TabBarIconI name="md-search" size={20} style={[styles.menu]} />
         </TouchableOpacity>
         <TouchableOpacity
           ref={ref => (this.touchable = ref)}
-          onPress={() => this.setState({ showPopover: true })} 
+          onPress={() => this.setState({ showPopover: true })}
           style={styles.secondaryMenu}>
-          <TabBarIconE name="dots-three-vertical" style={[styles.menu]} />
+          <TabBarIconE name="dots-three-vertical" size={20} style={[styles.menu]} />
         </TouchableOpacity>
         <this.POver />
       </View>
@@ -97,16 +97,16 @@ const styles = StyleSheet.create({
     // marginTop: StatusBar.currentHeight,
     backgroundColor: color.primary,
     flexDirection: 'row',
-    borderBottomWidth: 2,
-    borderBottomColor: color.primary,
-    paddingVertical: 10,
+    // borderBottomWidth: 2,
+    // borderBottomColor: color.primary,
+    paddingVertical: 5,
   },
   primaryMenu: {
     // position: 'absolute',
     // left: 0
   },
   headerText: {
-    fontSize: 25,
+    fontSize: 20,
     fontFamily: 'space-mono',
     fontWeight: 'bold',
     color: color.black,

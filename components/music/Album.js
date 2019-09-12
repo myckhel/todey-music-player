@@ -25,9 +25,9 @@ export default ({index, title, cover, songCount, genreCount, rating, artist}) =>
       rating={rating}
       artist={artist}
       Meta={({style}) => <Meta
-        style={style} 
+        style={style}
         songCount={songCount} genreCount={genreCount} />}
-        title={title} cover={cover} style={{ }} />
+        title={title} cover={cover} style={{ }} type="album" />
   )
 }
 

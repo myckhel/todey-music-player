@@ -9,4 +9,12 @@ export default {
     height,
   },
   isSmallDevice: width < 375,
+  text: {
+    small: 10,
+    medium: 13,
+    big: 10,
+    large: 10,
+  },
+  verticalMargin: 5,
+  horizontalMargin: 5,
 };

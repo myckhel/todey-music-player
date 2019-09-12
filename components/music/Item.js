@@ -24,6 +24,23 @@ export default class Item extends PureComponent {
     }
   }
 
+  RenderPlaceholder = () => {
+    const { type } = this.props
+    switch (type) {
+      case 'artist':
+        return <TabBarIconM name={'artist'} style={styles.img} />
+        break;
+      case 'album':
+        return <TabBarIconM name={'album'} style={styles.img} />
+        break;
+      case 'genre':
+        return <TabBarIconE name={'creative-commons-attribution'} style={styles.img} />
+        break;
+      default:
+        return <TabBarIconE name="music" style={styles.img} />
+    }
+  }
+
   POver = () =>
     <Popover
       isVisible={this.state.showPopover}
@@ -38,8 +55,7 @@ export default class Item extends PureComponent {
 
   render (){
     const {cover, path, index, onPress, title, artist, author, paused, fileName, playing, togglePlay, Meta, rating} = this.props
-
-    let src = require(`../../assets/images/covers/Asa.jpg`)
+    // let src = require(`../../assets/images/covers/Asa.jpg`)
 
     return (
       <TouchableOpacity
@@ -48,23 +64,25 @@ export default class Item extends PureComponent {
         <View style={styles.imgWrapper}>
         {typeof cover === "function" ? (
           cover({style: styles.img})
-        ) : (
+        ) : cover
+        ? (
           <FastImage
             style={styles.img}
-            source={cover ? {uri: cover} : src} />
-        )}
+            source={{uri: cover}} />
+        )
+        : <this.RenderPlaceholder />}
         </View>
         <View style={styles.overview}>
           {/*<View></View>*/}
-          <Text style={styles.title}>{title} {(artist || author || fileName) && <Text style={styles.artist}> - {artist || author || fileName}</Text>}</Text>
+          <Text style={styles.title}>{title} {(artist || author || fileName) && <Text style={styles.artist}> {` - ${artist || author || fileName}`}</Text>}</Text>
           <View style={styles.metaContainer}>
           {typeof Meta === 'function' && (<Meta style={styles.metaItem} />)}
             <View style={styles.metaItem}>
-              <TabBarIconM name="playlist-play" style={[styles.metaIcon]} />
+              <TabBarIconM size={17} name="playlist-play" style={[styles.metaIcon]} />
               <Text style={styles.metaText}>{15}</Text>
             </View>
             <View style={styles.metaItem}>
-              <TabBarIconI name="md-star-half" style={[styles.metaIcon]} />
+              <TabBarIconI size={17} name="md-star-half" style={[styles.metaIcon]} />
               <Text style={styles.metaText}>{rating}</Text>
             </View>
           </View>
@@ -74,7 +92,7 @@ export default class Item extends PureComponent {
           ref={ref => (this.touchable = ref)}
           onPress={() => this.setState({ showPopover: true })}
           style={styles.primaryMenu}>
-          <TabBarIconE name="dots-three-vertical" style={[styles.menu]} />
+          <TabBarIconE name="dots-three-vertical" size={15} style={[styles.menu]} />
         </TouchableOpacity>
         <View style={styles.separator}></View>
         <this.POver />
@@ -84,15 +102,17 @@ export default class Item extends PureComponent {
 }
 
 export const NowPlaying = ({src, title, artist, author, fileName, togglePlay, paused, elapsed, onPress, cover}) => {
-  src = require(`../../assets/images/covers/AKON.jpg`)
   return (
     <TouchableOpacity
       onPress={() => onPress()}
       style={styles.container} >
       <View style={styles.imgWrapper}>
-        <Image
+      {cover
+        ? <FastImage
           style={styles.img}
-          source={cover ? {uri: cover} : src} />
+          source={{uri: cover}} />
+        : <TabBarIconE name="music" style={styles.img} />
+      }
       </View>
       <View style={styles.overview}>
         {/*<View></View>*/}
@@ -115,7 +135,6 @@ export const NowPlaying = ({src, title, artist, author, fileName, togglePlay, pa
 const PopoverWrapper = ({canMark, spinner, onMark}) => {
   return (
     <>
-      {/*<ActivityIndicator visible={spinner} textStyle={styles.spinnerTextStyle} />*/}
       <View style={styles.popContainer}>
         {canMark && (
           <TouchableOpacity style={styles.item} onPress={onMark}>
@@ -135,7 +154,11 @@ const PopoverWrapper = ({canMark, spinner, onMark}) => {
           <Text style={styles.itemText}>Information</Text>
         </TouchableOpacity>}
         {<TouchableOpacity style={styles.item} onPress={()=>{}}>
-          <Text style={styles.itemText}>Rate</Text>
+          <TabBarIconI name="md-star" style={[styles.metaIcon]} />
+          <TabBarIconI name="md-star" style={[styles.metaIcon]} />
+          <TabBarIconI name="md-star" style={[styles.metaIcon]} />
+          <TabBarIconI name="md-star" style={[styles.metaIcon]} />
+          <TabBarIconI name="md-star" style={[styles.metaIcon]} />
         </TouchableOpacity>}
       </View>
     </>
@@ -144,9 +167,9 @@ const PopoverWrapper = ({canMark, spinner, onMark}) => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 5,
+    marginHorizontal: Layout.horizontalMargin,
     padding: 5,
-    width: layout.window.width - 10,
+    width: Layout.window.width - 10,
     // height: layout.window.height - 10,
     // flex: 1,
     flexDirection: 'row',
@@ -168,10 +191,10 @@ const styles = StyleSheet.create({
     // alignItems: 'stretch'
   },
   separator: {
-    borderBottomWidth: 3,
+    borderBottomWidth: 1,
     borderBottomColor: color.primary,
     width: layout.window.width - (5 + 5 + 50 + 5 + 10 + 50),
-    height: 2,
+    // height: 2,
     position: 'absolute',
     bottom: 0,
     marginLeft: 5 + 5 + 50 + 5,
@@ -179,6 +202,7 @@ const styles = StyleSheet.create({
     // alignSelf: 'flex-end'
   },
   title: {
+    fontSize: Layout.text.medium,
     paddingHorizontal: 5,
   },
   artist: {
@@ -190,6 +214,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   metaItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -197,15 +223,16 @@ const styles = StyleSheet.create({
 
   },
   metaText: {
-    alignSelf: 'flex-end'
+    fontSize: Layout.text.small,
+    // alignSelf: 'flex-end'
   },
   primaryMenu: {
+    alignItems: 'center',
     // alignSelf: 'flex-end',
-    flexDirection: 'column',
     marginLeft: 'auto',
   },
   menu: {
-    padding: 5,
+    // padding: 5,
     marginHorizontal: 9,
     marginVertical: 5,
     color: color.black
@@ -227,6 +254,7 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomColor: "rgba(230,230,230,0.4)",

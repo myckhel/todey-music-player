@@ -26,7 +26,7 @@ export default ({onPress, index, title, cover, songCount, albumCount, rating, ge
   return (
     <Item onPress={onPress} index={index} rating={rating}
     Meta={({style}) => <Meta style={style} songCount={songCount} albumCount={albumCount} genreCount={genreCount} />}
-      title={title} cover={cover} style={{ }} />
+      title={title} cover={cover} style={{ }} type="artist" />
   )
 }
 

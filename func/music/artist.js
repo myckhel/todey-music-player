@@ -10,16 +10,11 @@ class Artist extends Base {
   }
 
   append = () => {
-    const items = this[this.name]
-
-    items.map((item) => {
-      console.log(item);
+    this[this.name].map((item) => {
       item.genreCount = genres(item.songs).count()
       item.albumCount = albums(item.songs).count()
-      item.rating = rating().count(singularName, item)
+      item.rating = rating().count(this.singularName, item)
     })
-
-    this[this.name] = items
   }
 }
 

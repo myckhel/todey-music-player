@@ -21,6 +21,8 @@ import { Text,
  import MusicFiles, { RNAndroidAudioStore } from 'react-native-get-music-files'
  import Permissions from 'react-native-permissions'
 
+ import Music from '../../func/music/Music'
+
 import { loadMusics, loadingMusic, play } from "../../redux/actions";
 import load from "../../func/music/load";
 import { connect } from 'react-redux';
@@ -71,17 +73,20 @@ class SongsTab extends PureComponent {
        DeviceEventEmitter.addListener(
          'onBatchReceived',
          (params) => {
-           this.props.loadingMusic(true)
-           this.props.loadMusics([...this.state.musics, ...params.batch])
-           this.props.loadingMusic(false)
+           // console.log(params);
+           Music.add(params.batch)
+           // this.props.loadingMusic(true)
+           // this.props.loadMusics([...this.state.musics, ...params.batch])
+           // this.props.loadingMusic(false)
          }
        )
 
        DeviceEventEmitter.addListener(
          'onLastBatchReceived',
          (params) => {
-           console.log(params);
-             this.setState(alert('last batch sent'));
+           // console.log(params);
+             // this.setState()
+               alert('last batch sent')
            }
        )
       // console.log(this.props.loadMusics);
@@ -128,21 +133,21 @@ class SongsTab extends PureComponent {
         // delay: 1000
       })
       .then( async (m) => {
-        try {
-          this.props.loadingMusic(true)
-          this.props.loadMusics([...this.state.musics, ...m])
-        } catch (e) {
-           console.log(e);
-        } finally {
-          this.props.loadingMusic(false)
-        }
+        // try {
+        //   this.props.loadingMusic(true)
+        //   this.props.loadMusics([...this.state.musics, ...m])
+        // } catch (e) {
+        //    console.log(e);
+        // } finally {
+        //   this.props.loadingMusic(false)
+        // }
       })
     };
 
     storeAll = () => {
       RNAndroidAudioStore.getAll({
         id: true,
-        blured: true, // works only when 'cover' is set to true
+        // blured: true, // works only when 'cover' is set to true
         artist: true,
         duration: true, //default : true
         cover: true, //default : true,
@@ -150,25 +155,26 @@ class SongsTab extends PureComponent {
         title: true,
         fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
         // minimumSongDuration: 10000, // get songs bigger than 10000 miliseconds duration,
-        batchNumber : 1,
+        batchNumber : 10,
       })
       .then( async (m) => {
-        try {
-          this.props.loadingMusic(true)
-          this.props.loadMusics([...this.state.musics, ...m])
-        } catch (e) {
-           console.log(e);
-        } finally {
-          this.props.loadingMusic(false)
-        }
+        // try {
+        //   this.props.loadingMusic(true)
+        //   this.props.loadMusics([...this.state.musics, ...m])
+        // } catch (e) {
+        //    console.log(e);
+        // } finally {
+        //   this.props.loadingMusic(false)
+        // }
       })
     }
 
     init = async () => {
       try {
         Promise.all([
-          this.getAll(),
-          // this.getAlbums('Asa'),
+          // this.getAll(),
+          this.storeAll(),
+          this.getAlbums('Asa'),
           // this.getArtists(),
           // this.getSongs('Asa'),
           // this.search('Asa'),
@@ -241,12 +247,11 @@ class SongsTab extends PureComponent {
 
    render(){
     const { musics, playingProgress } = this.state
-    console.log(this.state);
+    // console.log(Music)//.albums.search('black market'));
+    // console.log(this.state);
     return (
       <View style={styles.containers}>
         <FlatList
-          shouldItemUpdate={(props,nextProps)=>
-          { console.log(props,nextProps); return props.item!==nextProps.item}}
           keyExtractor={(item, index) => `${index}`}
           data={musics}
           disableVirtualization={false}

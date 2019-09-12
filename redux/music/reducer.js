@@ -37,9 +37,9 @@ const merge = (state, newState) => {
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
     case LOAD_MUSIC:
-      const album = storeAlbums(action.payload).store()
-      const genre = storeGenres(action.payload).store()
-      const artist = storeArtists(action.payload).store()
+      const album = storeAlbums(action.payload)
+      const genre = storeGenres(action.payload)
+      const artist = storeArtists(action.payload)
       const musics = rating().songsWithRating(action.payload)
       // console.log(artist.store());
       return merge(state, {musics, artist, album, genre});
