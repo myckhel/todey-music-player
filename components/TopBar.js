@@ -24,8 +24,8 @@ export class TopBar extends PureComponent {
     }
   }
 
-  toggleSearch = () => {
-    this.setState(prev => ({searching: !prev.searching}))
+  toggleSearch = (mode = undefined) => {
+    this.setState(prev => ({searching: mode !== undefined ? mode : !prev.searching}))
   }
 
   POver = () =>
@@ -50,11 +50,18 @@ export class TopBar extends PureComponent {
         </TouchableOpacity>
         {searching
         ? <TextInput
+            ref={ref => (this.searchInput = ref)}
             autoFocus={true}
             style={styles.search}
             placeholder='Search'
             value={search}
-            onChangeText={(search) => {console.log(search);this.setState({search})}}
+            onBlur={() => this.toggleSearch(false)}
+            onChangeText={(search) => {
+              this.setState({search})
+              const searchFunc = navigation.getParam('searchFunc')
+              console.log(navigation);
+              typeof searchFunc === 'function' && searchFunc(search)
+            }}
           />
         :<View style={{justifyContent: 'center', flex: 1}}>
           <Text style={styles.headerText}>{title ? title : 'Todey Player'}</Text>

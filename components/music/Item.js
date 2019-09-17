@@ -54,7 +54,7 @@ export default class Item extends PureComponent {
     </Popover>
 
   render (){
-    const {cover, path, index, onPress, title, artist, author, paused, fileName, playing, togglePlay, Meta, rating} = this.props
+    const {cover, icon, path, index, onPress, title, artist, author, paused, fileName, playing, togglePlay, Meta, rating} = this.props
     // let src = require(`../../assets/images/covers/Asa.jpg`)
 
     return (
@@ -64,11 +64,11 @@ export default class Item extends PureComponent {
         <View style={styles.imgWrapper}>
         {typeof cover === "function" ? (
           cover({style: styles.img})
-        ) : cover
+        ) : (icon || cover)
         ? (
           <FastImage
             style={styles.img}
-            source={{uri: cover}} />
+            source={{uri: icon || cover}} />
         )
         : <this.RenderPlaceholder />}
         </View>
@@ -204,10 +204,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: Layout.text.medium,
     paddingHorizontal: 5,
+    color: color.secondary,
   },
   artist: {
     paddingHorizontal: 5,
     fontStyle: 'italic',
+    color: color.secondary,
   },
   metaContainer: {
     flex: 1,
@@ -224,6 +226,7 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: Layout.text.small,
+    color: color.secondary,
     // alignSelf: 'flex-end'
   },
   primaryMenu: {
@@ -248,6 +251,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.primary,
     padding: 5,
     marginTop: 'auto',
+    color: color.secondary,
   },
   popContainer: {
     // width: 200
@@ -265,6 +269,7 @@ const styles = StyleSheet.create({
   itemText: {
     fontFamily: "Nunito-SemiBold",
     fontSize: 14,
-    color: "#78849E"
+    // color: "#78849E",
+    color: color.secondary,
   }
 })

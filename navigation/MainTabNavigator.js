@@ -39,83 +39,16 @@ const MainStack = createStackNavigator({
       backgroundColor: color.primary,
     },
     header: <TopBar navigation={navigation} />,
-    // headerLeft:(
-    //   <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-    //     <TabBarIconE name="dots-three-vertical" style={[menu]} />
-    //   <
-    // ),
     headerStyle: { paddingRight: 10, paddingLeft: 15 },
     headerTintColor: '#000',
   }),
 })
 
 const drawernav = createDrawerNavigator({
-  MainMenu: {
-    screen: MainStack,
-  },
+  MainStack,
 }, {
   contentComponent: MainMenu,
   drawerWidth: Dimensions.get('window').width - 120,
 });
 
-export default createAppContainer(drawernav
-  // HomeStack,
-  // SettingsStack
-  // LinksStack,
-  // SettingsStack,
-);
-
-// import MusicNavigator from './MusicNavigator';
-// import { MusicTab } from './MusicNavigator';
-
-// const HomeStack = createStackNavigator({
-//   Music: {screen: MusicNavigator},
-//   Home: {screen: HomeScreen }
-// },
-// {
-//   initialRouteName: "Home"
-// }
-// );
-
-// HomeStack.navigationOptions = {
-  // tabBarLabel: 'Home',
-  // header: <TopBar />,
-  // tabBarIcon: ({ focused }) => (
-  //   <TabBarIcon
-  //     focused={focused}
-  //     name={
-  //       Platform.OS === 'ios'
-  //         ? `ios-information-circle${focused ? '' : '-outline'}`
-  //         : 'md-home'
-  //     }
-  //   />
-  // ),
-// };
-
-// const LinksStack = createStackNavigator({
-//   Links: LinksScreen,
-// });
-//
-// LinksStack.navigationOptions = {
-//   tabBarLabel: 'Links',
-//   tabBarIcon: ({ focused }) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-//     />
-//   ),
-// };
-//
-// const SettingsStack = createStackNavigator({
-//   Settings: SettingsScreen,
-// });
-//
-// SettingsStack.navigationOptions = {
-//   tabBarLabel: 'Settings',
-//   tabBarIcon: ({ focused }) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-//     />
-//   ),
-// };
+export default createAppContainer(drawernav);

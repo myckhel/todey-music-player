@@ -36,13 +36,18 @@ class SongsTab extends PureComponent {
       getAlbumsInput: "",
       getSongsInput: {},
       searchParam: "",
+      paged: [],
+      perPage: 10,
+      currentPage: 0,
       tracks: [],
       artists: [],
       albums: [],
       songs: [],
       search: [],
       musics: props.musics,
-      refreshing: props.loading
+      refreshing: props.loading,
+      searchText: '',
+      searchResults: [],
      }
    }
 
@@ -70,10 +75,13 @@ class SongsTab extends PureComponent {
         }
       })
 
+      // set search callback
+      this.props.navigation.setParams({searchFunc: (search) => console.log(search)})
+
        DeviceEventEmitter.addListener(
          'onBatchReceived',
          (params) => {
-           // console.log(params);
+           // console.log(params.batch);
            Music.add(params.batch)
            // this.props.loadingMusic(true)
            // this.props.loadMusics([...this.state.musics, ...params.batch])
@@ -132,16 +140,6 @@ class SongsTab extends PureComponent {
         batchNumber : 1,
         // delay: 1000
       })
-      .then( async (m) => {
-        // try {
-        //   this.props.loadingMusic(true)
-        //   this.props.loadMusics([...this.state.musics, ...m])
-        // } catch (e) {
-        //    console.log(e);
-        // } finally {
-        //   this.props.loadingMusic(false)
-        // }
-      })
     };
 
     storeAll = () => {
@@ -149,23 +147,17 @@ class SongsTab extends PureComponent {
         id: true,
         // blured: true, // works only when 'cover' is set to true
         artist: true,
-        duration: true, //default : true
-        cover: true, //default : true,
         genre: true,
         title: true,
-        fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
-        // minimumSongDuration: 10000, // get songs bigger than 10000 miliseconds duration,
-        batchNumber : 10,
-      })
-      .then( async (m) => {
-        // try {
-        //   this.props.loadingMusic(true)
-        //   this.props.loadMusics([...this.state.musics, ...m])
-        // } catch (e) {
-        //    console.log(e);
-        // } finally {
-        //   this.props.loadingMusic(false)
-        // }
+        cover: true, //default : true,
+        coverFolder: '.covers',
+        // coverResizeRatio: 2,
+        // icon: true,
+        // iconSize: 50,
+        album: true,
+        delay: 1000,
+        // fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
+        batchNumber : 50,
       })
     }
 
@@ -174,7 +166,7 @@ class SongsTab extends PureComponent {
         Promise.all([
           // this.getAll(),
           this.storeAll(),
-          this.getAlbums('Asa'),
+          // this.getAlbums('Asa'),
           // this.getArtists(),
           // this.getSongs('Asa'),
           // this.search('Asa'),
@@ -187,6 +179,7 @@ class SongsTab extends PureComponent {
     getAlbums = (artist='') => {
       RNAndroidAudioStore.getAlbums({ artist : artist })
         .then(f => {
+          console.log(f);
           this.setState({ ...this.state, albums: f });
         })
         .catch(er => console.log(er));
@@ -195,6 +188,7 @@ class SongsTab extends PureComponent {
     getArtists = () => {
       RNAndroidAudioStore.getArtists({})
         .then(f => {
+          console.log(f);
           this.setState({ ...this.state, artists: f });
         })
         .catch(er => console.log(er));
@@ -203,6 +197,7 @@ class SongsTab extends PureComponent {
     getSongs = (artist = '', album = '') => {
       RNAndroidAudioStore.getSongs({ artist, album })
         .then(f => {
+          console.log(f);
           this.setState({ ...this.state, songs: f });
         })
         .catch(er => console.log(er));
@@ -211,7 +206,8 @@ class SongsTab extends PureComponent {
     search = searchParam => {
       RNAndroidAudioStore.search({ searchParam })
         .then(f => {
-          this.setState({ ...this.state, search: f });
+          console.log(f);
+          this.setState({ search: f });
         })
         .catch(er => console.log(er));
     };
@@ -229,13 +225,10 @@ class SongsTab extends PureComponent {
    }
 
    static getDerivedStateFromProps = (next, last) => {
-     if (last !== next) {
-       return {
-         musics: next.musics,
-         refreshing: next.loading
-       }
+     return {
+       musics: next.musics,
+       refreshing: next.loading
      }
-     // console.log(last, next);
    }
 
    onRefresh = () => {
@@ -246,16 +239,39 @@ class SongsTab extends PureComponent {
    }
 
    render(){
-    const { musics, playingProgress } = this.state
+    const { musics, playingProgress, paged } = this.state
     // console.log(Music)//.albums.search('black market'));
     // console.log(this.state);
     return (
-      <View style={styles.containers}>
-        <FlatList
+      <ScrollView
+      refreshControl={<RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh}
+      />}
+      style={styles.containers}>
+        <View style={styles.contentContainer}>
+        {musics.map((item, i) => (
+          <Item
+          key={i}
+            onPress={() => this.playSong(item)}
+            rating={item.rating} index={i} artist={item.artist || item.author}
+            title={item.title} cover={item.cover} fileName={item.fileName} style={{ }}
+          />
+        ))}
+        </View>
+        {/*<FlatList
           keyExtractor={(item, index) => `${index}`}
           data={musics}
           disableVirtualization={false}
-          initialNumToRender={30}
+          // maxToRenderPerBatch={15}
+          // removeClippedSubviews={true}
+          legacyImplementation={true}
+          // initialNumToRender={20}
+          getItemLayout={(data, index) => ({
+            length: 70,
+            offset: 70*index,
+            index,
+          })}
           style={styles.containers}
           refreshControl={<RefreshControl
             refreshing={this.state.refreshing}
@@ -268,8 +284,8 @@ class SongsTab extends PureComponent {
               title={item.title} cover={item.cover} fileName={item.fileName} style={{ }}
             />
           )}
-          contentContainerStyle={styles.contentContainer} />
-      </View>
+          contentContainerStyle={styles.contentContainer} />*/}
+      </ScrollView>
     )
 
     playSong = (song) => {
@@ -288,7 +304,7 @@ export default connect(mapStateToProps,{ loadMusics, loadingMusic, play })(Songs
 const styles = StyleSheet.create({
   containers: {
     flex: 1,
-    // backgroundColor: '#000',
+    backgroundColor: color.alternative,
   },
   contentContainer: {
     // paddingTop: 30,

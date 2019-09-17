@@ -5,6 +5,7 @@ import {
   createStackNavigator,
   createAppContainer,
   createMaterialTopTabNavigator,
+  getActiveChildNavigationOptions,
 } from 'react-navigation';
 
 import TabBarIconI, { TabBarIconE, TabBarIconM } from '../components/TabBarIcon';
@@ -29,39 +30,38 @@ const defaultNavigationOptions = ({navigation}) => ({
   header: <></>,
 })
 
-const common = createStackNavigator({
+const common = {
   Listable: { screen: ListableScreen, },
-},{defaultNavigationOptions})
+}
 
 const SongStacks = createStackNavigator({
   Musics: {screen: SongsTab},
-  common,
+  ...common,
 },{ defaultNavigationOptions })
 
 const ArtistStacks = createStackNavigator({
   Artists: {screen: ArtistsTab},
-  common,
+  ...common,
 },{ defaultNavigationOptions })
 
 const AlbumStacks = createStackNavigator({
   Albums: {screen: AlbumsTab},
-  common,
+  ...common,
 },{ defaultNavigationOptions })
 
 const PlaylistStacks = createStackNavigator({
   Playlists: {screen: PlaylistsTab},
-  common,
+  ...common,
 },{ defaultNavigationOptions })
 
 const GenreStacks = createStackNavigator({
   Genres: {screen: GenresTab},
-  common,
+  ...common,
 },{ defaultNavigationOptions })
 
 const RatingStacks = createStackNavigator({
   Ratings: {screen: RatingsTab},
-  Listable: { screen: ListableScreen, },
-  common,
+  ...common,
 },{ defaultNavigationOptions })
 
 
@@ -135,14 +135,10 @@ export const MusicTab = createMaterialTopTabNavigator({
   tabBarPosition: 'top',
   swipeEnabled: true,
   animationEnabled: false,
-  defaultNavigationOptions: {
-    // headerStyle: {
-    //   backgroundColor: color.primary,
-    // },
-    headerTintColor: '#FFFFFF',
-    // title: 'Songs',
-    //Header title
-  },
+  defaultNavigationOptions: ({navigation, screenProps}) => ({
+    headerTintColor: color.white,
+    ...getActiveChildNavigationOptions(navigation, screenProps)
+  }),
   tabBarOptions: {
     showIcon: true,
     showLabel: false,
@@ -156,38 +152,14 @@ export const MusicTab = createMaterialTopTabNavigator({
     style: {
       backgroundColor: color.primary,
     },
-    // labelStyle: {
-    //   textAlign: 'center',
-    //   color: color.black,
-    //   fontSize: 10,
-    //   fontFamily: 'space-mono'
-    // },
     indicatorStyle: {
-      borderBottomColor: '#000',
+      borderBottomColor: color.black,
       borderBottomWidth: 2,
     },
-    activeTintColor: '#000',
-    // activeBackgroundColor: '#000',
-    inactiveTintColor: '#000',
+    activeTintColor: color.black,
+    activeBackgroundColor: color.black,
+    inactiveTintColor: color.black,
   },
 })
 
-export default MusicStack = createAppContainer(createStackNavigator({
-  Music: {
-    screen: MusicTab,
-  },
-}, {
-  defaultNavigationOptions: ({navigation}) => ({
-  //   headerStyle: {
-  //     backgroundColor: color.primary,
-  //   },
-    header: <></>,
-  //   // headerLeft:(
-  //   //   <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-  //   //     <TabBarIconE name="dots-three-vertical" style={[menu]} />
-  //   //   <
-  //   // ),
-  //   headerStyle: { paddingRight: 10, paddingLeft: 15 },
-  //   headerTintColor: '#000',
-  }),
-}))
+export default MusicStack = createAppContainer(MusicTab)

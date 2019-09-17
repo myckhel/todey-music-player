@@ -4,6 +4,8 @@ export default {
   primary: '#F58634',
   tintColor,
   black: '#000',
+  secondary: '#000',
+  alternative: '#fff',
   white: '#fff',
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,

@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { connect } from 'react-redux';
 import ytur from "./func/window"
+import color from './constants/Colors';
 
 import AppNavigator from './navigation/AppNavigator';
 // import MusicNavigator from './navigation/MusicNavigator';
@@ -22,6 +23,6 @@ export default function App(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: color.alternative,
   },
 });
