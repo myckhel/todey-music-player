@@ -1,10 +1,13 @@
 import {
   LOAD_MUSIC, LOADING_MUSIC, TOGGLE_PLAY, PLAY_SONG
 } from "../../constants/actionTypes";
+
 import storeArtists from "../../func/music/artist";
 import storeAlbums from "../../func/music/album";
 import storeGenres from "../../func/music/genre";
 import rating from '../../func/music/rating'
+
+import { setItem } from '../../func/app'
 
 import { loadingMusic } from './actions';
 
@@ -29,7 +32,6 @@ const INIT_STATE = {
   }
 };
 
-
 const merge = (state, newState) => {
   return Object.assign({}, state, newState)
 }
@@ -41,7 +43,6 @@ export default (state = INIT_STATE, action) => {
       const genre = storeGenres(action.payload)
       const artist = storeArtists(action.payload)
       const musics = rating().songsWithRating(action.payload)
-      // console.log(artist.store());
       return merge(state, {musics, artist, album, genre});
     case LOADING_MUSIC:
       return merge(state, {loading: action.payload});

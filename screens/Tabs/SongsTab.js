@@ -12,16 +12,18 @@ import { Text,
   // Modal,
   // ActivityIndicator,``
   View,
- } from 'react-native';
- import { TopBar } from '../../components/TopBar';
- import Item from '../../components/music/Item';
- import color from '../../constants/Colors';
- import {NavigationActions} from 'react-navigation';
+} from 'react-native';
+import { TopBar } from '../../components/TopBar';
+import Item from '../../components/music/Item';
+import color from '../../constants/Colors';
+import {NavigationActions} from 'react-navigation';
 
- import MusicFiles, { RNAndroidAudioStore } from 'react-native-get-music-files'
- import Permissions from 'react-native-permissions'
+import MusicFiles, { RNAndroidAudioStore } from 'react-native-get-music-files'
+import Permissions from 'react-native-permissions'
 
- import Music from '../../func/music/Music'
+import { setItem } from '../../func/app'
+
+import Music from '../../func/music/Music'
 
 import { loadMusics, loadingMusic, play } from "../../redux/actions";
 import load from "../../func/music/load";
@@ -163,6 +165,11 @@ class SongsTab extends PureComponent {
 
     init = async () => {
       try {
+        setItem('songs', [])
+        const songs =  setItem('songs').then((l) => {
+          console.log(l);
+        })
+        console.log(songs);
         Promise.all([
           // this.getAll(),
           this.storeAll(),
