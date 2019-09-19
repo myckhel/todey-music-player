@@ -10,6 +10,11 @@ export default class Base {
     // console.log(name);
   }
 
+  search = (q) => this[this.singularName].map(
+      (s) => s[singularName] === q
+      // || s.artist === q
+    )
+
   update = (musics) => {
     this.musics = musics
     return this.store()

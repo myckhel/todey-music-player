@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image'
+import Popover from "react-native-popover-view";
 
 import TabBarIconI, { TabBarIconE, TabBarIconM } from '../../components/TabBarIcon';
 // import { Ionicons, Entypo } from '@expo/vector-icons';
@@ -17,7 +18,24 @@ import layout from '../../constants/Layout';
 export default class Item extends PureComponent {
   constructor(props){
     super(props)
+
+    this.state = {
+      showPopover: false,
+    }
   }
+
+  POver = () =>
+    <Popover
+      isVisible={this.state.showPopover}
+      fromView={this.touchable}
+      placement="bottom"
+      onRequestClose={() => {
+        this.setState({ showPopover: false });
+      }}
+    >
+      <PopoverWrapper canMark={true} />
+    </Popover>
+
   render (){
     const {cover, path, index, onPress, title, artist, author, paused, fileName, playing, togglePlay, Meta, rating} = this.props
 
@@ -52,10 +70,14 @@ export default class Item extends PureComponent {
           </View>
           {/*<View></View>*/}
         </View>
-        <TouchableOpacity onPress={() => {}} style={styles.primaryMenu}>
+        <TouchableOpacity
+          ref={ref => (this.touchable = ref)}
+          onPress={() => this.setState({ showPopover: true })}
+          style={styles.primaryMenu}>
           <TabBarIconE name="dots-three-vertical" style={[styles.menu]} />
         </TouchableOpacity>
         <View style={styles.separator}></View>
+        <this.POver />
       </TouchableOpacity>
     )
   }
@@ -89,6 +111,36 @@ export const NowPlaying = ({src, title, artist, author, fileName, togglePlay, pa
     </TouchableOpacity>
   );
 }
+
+const PopoverWrapper = ({canMark, spinner, onMark}) => {
+  return (
+    <>
+      {/*<ActivityIndicator visible={spinner} textStyle={styles.spinnerTextStyle} />*/}
+      <View style={styles.popContainer}>
+        {canMark && (
+          <TouchableOpacity style={styles.item} onPress={onMark}>
+            <Text style={styles.itemText}>Mark / Unmark</Text>
+          </TouchableOpacity>
+        )}
+        {<TouchableOpacity style={styles.item} onPress={()=>{}}>
+          <Text style={styles.itemText}>Append</Text>
+        </TouchableOpacity>}
+        {<TouchableOpacity style={styles.item} onPress={()=>{}}>
+          <Text style={styles.itemText}>Add To</Text>
+        </TouchableOpacity>}
+        {<TouchableOpacity style={styles.item} onPress={()=>{}}>
+          <Text style={styles.itemText}>Play View</Text>
+        </TouchableOpacity>}
+        {<TouchableOpacity style={styles.item} onPress={()=>{}}>
+          <Text style={styles.itemText}>Information</Text>
+        </TouchableOpacity>}
+        {<TouchableOpacity style={styles.item} onPress={()=>{}}>
+          <Text style={styles.itemText}>Rate</Text>
+        </TouchableOpacity>}
+      </View>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -169,5 +221,22 @@ const styles = StyleSheet.create({
     backgroundColor: color.primary,
     padding: 5,
     marginTop: 'auto',
+  },
+  popContainer: {
+    // width: 200
+  },
+  item: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomColor: "rgba(230,230,230,0.4)",
+    borderBottomWidth: 1,
+    paddingHorizontal: 30,
+    paddingVertical: 10
+  },
+  itemText: {
+    fontFamily: "Nunito-SemiBold",
+    fontSize: 14,
+    color: "#78849E"
   }
 })

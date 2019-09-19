@@ -49,43 +49,31 @@ class SongsTab extends PureComponent {
     }
 
     componentDidMount = async () => {
-      try {
-        // this.filePermission()
-        Permissions.checkMultiple(['storage'])
-        .then( async (res) => {
-          let perm;
-          if (res.storage === 'authorized') {
-            perm = res.storage
-          } else {
-            perm = await this.askPermission()
-          }
-          if (perm === 'authorized') {
-            // this.getAll()
-            // this.storeAll()
-            this.init()
-          }
-        }).catch((e) => {
-          console.log(e);
-        })
-
-      } catch (e) {
-        console.log(e);
-      }
+      Permissions.checkMultiple(['storage'])
+      .then((res) => {
+        let perm;
+        if (res.storage === 'authorized') {
+          perm = res.storage
+          this.init()
+        } else {
+          Permissions.request('storage')
+          .then((perm) => {
+            if (perm === 'authorized') {
+              this.init()
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+        }
+      })
 
        DeviceEventEmitter.addListener(
          'onBatchReceived',
-         async (params) => {
-           // alert(JSON.stringify(params.batch))
-           // console.log(params);
-           // try {
-             await this.props.loadingMusic(true)
-             await this.props.loadMusics([...this.state.musics, ...params.batch])
-           // } catch (e) {
-              // console.log(e);
-           // } finally {
-             await this.props.loadingMusic(false)
-           // }
-           // this.setState(prev =>({ musics: [...prev.musics, ...params.batch] }))
+         (params) => {
+           this.props.loadingMusic(true)
+           this.props.loadMusics([...this.state.musics, ...params.batch])
+           this.props.loadingMusic(false)
          }
        )
 
@@ -128,37 +116,30 @@ class SongsTab extends PureComponent {
     getAll = () => {
       MusicFiles.getAll({
         id: true,
-        blured: true, // works only when 'cover' is set to true
+        // blured: true, // works only when 'cover' is set to true
         artist: true,
         duration: true, //default : true
         cover: true, //default : true,
         genre: true,
         title: true,
-        fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
+        // fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
         // minimumSongDuration: 10000, // get songs bigger than 10000 miliseconds duration,
         batchNumber : 1,
         // delay: 1000
       })
       .then( async (m) => {
         try {
-          await this.props.loadingMusic(true)
-          await this.props.loadMusics([...this.state.musics, ...m])
+          this.props.loadingMusic(true)
+          this.props.loadMusics([...this.state.musics, ...m])
         } catch (e) {
            console.log(e);
         } finally {
-          await this.props.loadingMusic(false)
+          this.props.loadingMusic(false)
         }
       })
     };
 
     storeAll = () => {
-      // RNAndroidAudioStore.getArtists()
-      // .then((m) => {
-      //   console.log(m);
-      // })
-      // .catch((e) => {
-      //   console.log(e);
-      // })
       RNAndroidAudioStore.getAll({
         id: true,
         blured: true, // works only when 'cover' is set to true
@@ -173,19 +154,19 @@ class SongsTab extends PureComponent {
       })
       .then( async (m) => {
         try {
-          await this.props.loadingMusic(true)
-          await this.props.loadMusics([...this.state.musics, ...m])
+          this.props.loadingMusic(true)
+          this.props.loadMusics([...this.state.musics, ...m])
         } catch (e) {
            console.log(e);
         } finally {
-          await this.props.loadingMusic(false)
+          this.props.loadingMusic(false)
         }
       })
     }
 
     init = async () => {
       try {
-        await Promise.all([
+        Promise.all([
           this.getAll(),
           // this.getAlbums('Asa'),
           // this.getArtists(),
@@ -228,19 +209,6 @@ class SongsTab extends PureComponent {
         })
         .catch(er => console.log(er));
     };
-
-   askPermission = async () => {
-     return new Promise(function(resolve, reject) {
-       Permissions.request('storage')
-       .then((response) => {
-         // this.setState({permission: response})
-         resolve(response);
-       })
-       .catch((e) => {
-         reject(e);
-       })
-     });
-   }
 
    navigateToScreen = (route, params = {}) => {
      const navigateAction = NavigationActions.navigate({
