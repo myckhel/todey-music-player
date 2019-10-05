@@ -1,12 +1,16 @@
 import React from 'react';
 import { Platform, Dimensions } from 'react-native';
-import {
-  createDrawerNavigator,
-  createMaterialTopTabNavigator,
-  createStackNavigator,
-  createBottomTabNavigator,
-  createAppContainer
-} from 'react-navigation';
+// import {
+//   createDrawerNavigator,
+//   createMaterialTopTabNavigator,
+//   createStackNavigator,
+//   createBottomTabNavigator,
+//   createAppContainer
+// } from 'react-navigation';
+
+import { createAppContainer, getActiveChildNavigationOptions } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 
 import TabBarIcon from '../components/TabBarIcon';
 import MusicScreen from '../screens/Stacks/MusicScreen';

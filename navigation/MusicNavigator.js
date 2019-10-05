@@ -10,8 +10,7 @@ import { Dimensions } from 'react-native';
 
 import { createAppContainer, getActiveChildNavigationOptions } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createTabNavigator, createMaterialTopTabNavigator } from 'react-navigation-tabs';
 
 import TabBarIconI, { TabBarIconE, TabBarIconM } from '../components/TabBarIcon';
 import SongsTab from '../screens/Tabs/SongsTab';
@@ -142,7 +141,7 @@ export const MusicTab = createMaterialTopTabNavigator({
   animationEnabled: false,
   defaultNavigationOptions: ({navigation, screenProps}) => ({
     headerTintColor: color.white,
-    ...getActiveChildNavigationOptions(navigation, screenProps)
+    // ...getActiveChildNavigationOptions(navigation, screenProps)
   }),
   tabBarOptions: {
     showIcon: true,

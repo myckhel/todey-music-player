@@ -5,7 +5,7 @@ export const setItem = async (name, item) => {
 }
 
 export const getItem = async (name) => {
-  return AsyncStorage.getItem(name)
+  return JSON.parse(await AsyncStorage.getItem(name))
 }
 
 window.merge = (state, newState) => {

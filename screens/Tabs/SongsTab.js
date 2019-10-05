@@ -16,7 +16,6 @@ import { Text,
 import { TopBar } from '../../components/TopBar';
 import Item from '../../components/music/Item';
 import color from '../../constants/Colors';
-import {NavigationActions} from 'react-navigation';
 
 import MusicFiles, { RNAndroidAudioStore } from 'react-native-get-music-files'
 import Permissions from 'react-native-permissions'
@@ -63,12 +62,12 @@ class SongsTab extends PureComponent {
         let perm;
         if (res.storage === 'authorized') {
           perm = res.storage
-          this.init()
+          // this.init()
         } else {
           Permissions.request('storage')
           .then((perm) => {
             if (perm === 'authorized') {
-              this.init()
+              // this.init()
             }
           })
           .catch((e) => {
@@ -85,6 +84,7 @@ class SongsTab extends PureComponent {
          (params) => {
            // console.log(params.batch);
            Music.add(params.batch)
+           // setItem('songs', [])
            // this.props.loadingMusic(true)
            // this.props.loadMusics([...this.state.musics, ...params.batch])
            // this.props.loadingMusic(false)
@@ -161,15 +161,13 @@ class SongsTab extends PureComponent {
         // fields: ['title', 'artwork', 'lyrics', 'duration', 'artist', 'genre', 'albumTitle'],
         batchNumber : 50,
       })
+      .then((j) => {
+        console.log(j);
+      })
     }
 
     init = async () => {
       try {
-        setItem('songs', [])
-        const songs =  setItem('songs').then((l) => {
-          console.log(l);
-        })
-        console.log(songs);
         Promise.all([
           // this.getAll(),
           this.storeAll(),
@@ -219,24 +217,36 @@ class SongsTab extends PureComponent {
         .catch(er => console.log(er));
     };
 
-   navigateToScreen = (route, params = {}) => {
-     const navigateAction = NavigationActions.navigate({
-       routeName: route,
-       params
-     });
-     this.props.navigation.dispatch(navigateAction);
-   }
+    navigateToScreen = (route, params = {}) => {
+      this.props.navigation.navigate({
+        routeName: route,
+        params
+      });
+    }
 
    playSong = (song) => {
      this.props.play(song)
    }
 
-   static getDerivedStateFromProps = (next, last) => {
-     return {
-       musics: next.musics,
-       refreshing: next.loading
+   static getDerivedStateFromProps = (p, s) => {
+     if (p.musics !== s.musics || p.loading !== s.loading) {
+       return {
+         musics: p.musics,
+         refreshing: p.loading
+       }
      }
+     return null
    }
+
+   // componentDidUpdate = (pp, ps) => {
+   //   if (this.props !== pp) {
+   //     const { musics, loading } = this.props
+   //     this.setState({
+   //       musics: musics,
+   //       refreshing: loading
+   //     })
+   //   }
+   // }
 
    onRefresh = () => {
      this.setState({refreshing: true})
@@ -245,10 +255,14 @@ class SongsTab extends PureComponent {
      }, 2000)
    }
 
+   playSong = (song) => {
+     this.props.play(song)
+   }
+
    render(){
     const { musics, playingProgress, paged } = this.state
     // console.log(Music)//.albums.search('black market'));
-    // console.log(this.state);
+    // console.log('this.state');
     return (
       <ScrollView
       refreshControl={<RefreshControl
@@ -259,7 +273,7 @@ class SongsTab extends PureComponent {
         <View style={styles.contentContainer}>
         {musics.map((item, i) => (
           <Item
-          key={i}
+            key={i}
             onPress={() => this.playSong(item)}
             rating={item.rating} index={i} artist={item.artist || item.author}
             title={item.title} cover={item.cover} fileName={item.fileName} style={{ }}
@@ -294,10 +308,6 @@ class SongsTab extends PureComponent {
           contentContainerStyle={styles.contentContainer} />*/}
       </ScrollView>
     )
-
-    playSong = (song) => {
-      this.props.play(song)
-    }
   }
 }
 

@@ -17,7 +17,7 @@ const INIT_STATE = {
   artist: {},
   album: {},
   genre: {},
-  loading: true,
+  loading: false,
   playing: {
     music: {},
     inPlay: false,
@@ -43,6 +43,7 @@ export default (state = INIT_STATE, action) => {
       const genre = storeGenres(action.payload)
       const artist = storeArtists(action.payload)
       const musics = rating().songsWithRating(action.payload)
+      setItem('songs', musics)
       return merge(state, {musics, artist, album, genre});
     case LOADING_MUSIC:
       return merge(state, {loading: action.payload});

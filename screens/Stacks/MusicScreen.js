@@ -5,13 +5,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  Slider,
   TouchableOpacity,
   View,
 } from 'react-native';
 
-import {NavigationActions} from 'react-navigation';
-
+import Slider from '@react-native-community/slider'
 // components
 import { TopBar } from '../../components/TopBar';
 import color from '../../constants/Colors';
@@ -19,6 +17,7 @@ import color from '../../constants/Colors';
 
 import { connect } from 'react-redux';
 import { togglePlay } from "../../redux/actions";
+// import { store } from "../../redux/store";
 
 // import MenuIcon from '../assets/images/primary_menu_icon.png';
 // import SecondaryMenuIcon from '../assets/images/secondary_menu_icon.png';
@@ -42,11 +41,10 @@ class MusicScreen extends PureComponent {
   }
 
    navigateToScreen = (route, params = {}) => {
-     const navigateAction = NavigationActions.navigate({
+     this.props.navigation.navigate({
        routeName: route,
        params
      });
-     this.props.navigation.dispatch(navigateAction);
    }
 
    toggleCollapsedPlay = () => {
@@ -86,7 +84,7 @@ class MusicScreen extends PureComponent {
     // console.log({ playingProgress, playing, paused, music});
     return (
       <View style={styles.container}>
-        <MusicNavigator />
+        <MusicNavigator  />
         {this.state.playing &&
           this.state.collapsedPlay ? (
             <View style={styles.circlePlayIcon}>

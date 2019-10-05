@@ -5,8 +5,6 @@ import { Text,
   View,
  } from 'react-native';
  import { connect } from 'react-redux';
- import {NavigationActions} from 'react-navigation';
-
  import color from '../../constants/Colors';
 
 class Play extends PureComponent {

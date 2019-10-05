@@ -14,8 +14,6 @@ import { Text,
  import Artist from '../../components/music/Artist';
  import color from '../../constants/Colors';
 
- import {NavigationActions} from 'react-navigation';
-
 class ArtistsTab extends PureComponent {
    constructor(props){
      super(props)
@@ -34,24 +32,35 @@ class ArtistsTab extends PureComponent {
      }, 2000)
    }
 
-   static getDerivedStateFromProps = (next, last) => {
-     if (last !== next) {
+   static getDerivedStateFromProps = (p, s) => {
+     if (p.artist.authors !== s.authors || p.loading !== s.refreshing) {
        return {
-         ...next.artist,
-         refreshing: next.loading
+         ...p.artist,
+         refreshing: p.loading
        }
      }
      return null
-     // console.log(last, next);
    }
 
    navigateToScreen = (route, params = {}) => {
-     const navigateAction = NavigationActions.navigate({
+     this.props.navigation.navigate({
        routeName: route,
        params
      });
-     this.props.navigation.dispatch(navigateAction);
    }
+
+   Artist = ({item, index}) => (
+     <Artist
+       onPress={() => this.navigateToScreen('Listable', {items: item, type: 'artist'})}
+       genreCount={item.genreCount}
+       rating={item.rating}
+       index={index}
+       albumCount={item.albumCount}
+       songCount={item.musicCount}
+       title={item.title}
+       cover={item.cover}
+       style={{ }} />
+   )
 
    render(){
     const { authors } = this.state
@@ -68,18 +77,7 @@ class ArtistsTab extends PureComponent {
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />}
-          renderItem={({item, index}) => (
-            <Artist
-              onPress={() => this.navigateToScreen('Listable', {items: item, type: 'artist'})}
-              genreCount={item.genreCount}
-              rating={item.rating}
-              index={index}
-              albumCount={item.albumCount}
-              songCount={item.musicCount}
-              title={item.title}
-              cover={item.cover}
-              style={{ }} />
-          )}
+          renderItem={this.Artist}
           contentContainerStyle={styles.contentContainer} />
       </View>
     )
