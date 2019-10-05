@@ -14,10 +14,6 @@ import { Text,
  import Genre from '../../components/music/Genre';
  import color from '../../constants/Colors';
 
-// import { Audio, Asset } from 'expo';
-//  import { FileSystem } from 'expo-file-system';
-// import artist from "../../func/music/artist";
-
 class GenresTab extends PureComponent {
    constructor(props){
      super(props)
@@ -36,20 +32,23 @@ class GenresTab extends PureComponent {
      }, 2000)
    }
 
-   // componentWillMount = () => {
-    // console.log('artist');
-   // }
-
-   static getDerivedStateFromProps = (next, last) => {
-     if (last !== next) {
+   static getDerivedStateFromProps = (p, s) => {
+     if (s.genres !== p.genre.genres || p.loading !== s.refreshing) {
        return {
-         ...next.genre,
-         refreshing: next.loading
+         ...p.genre,
+         refreshing: p.loading
        }
      }
      return
-     // console.log(last, next);
    }
+
+   Genre = ({item, index}) => (
+     <Genre
+        rating={item.rating} index={index}
+        albumCount={item.albumCount}
+        songCount={item.musicCount} title={item.title}
+        cover={item.cover} style={{ }} />
+   )
 
    render(){
     const { genres } = this.state
@@ -68,7 +67,7 @@ class GenresTab extends PureComponent {
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />}
-          renderItem={({item, index}) => (<Genre rating={item.rating} index={index} albumCount={item.albumCount} songCount={item.musicCount} title={item.title} cover={item.cover} style={{ }} />)}
+          renderItem={this.Genre}
           contentContainerStyle={styles.contentContainer} />
       </View>
     )

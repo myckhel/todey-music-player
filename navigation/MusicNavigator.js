@@ -1,12 +1,5 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
-// import {
-//   createDrawerNavigator,
-//   createStackNavigator,
-//   createAppContainer,
-//   createMaterialTopTabNavigator,
-//   getActiveChildNavigationOptions,
-// } from 'react-navigation';
 
 import { createAppContainer, getActiveChildNavigationOptions } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -24,47 +17,45 @@ import MainMenu from "../components/app/MainMenu";
 
 import AboutScreen from '../screens/MenuStacks/AboutStack';
 import ListableScreen from '../screens/Stacks/ListableScreen';
-// import LinksScreen from '../screens/LinksScreen';
 
 import { TopBar } from '../components/TopBar';
 import color from '../constants/Colors';
 
-// import MainStack from './MainTabNavigator'
 const defaultNavigationOptions = ({navigation}) => ({
   header: <></>,
 })
 
 const common = {
-  Listable: { screen: ListableScreen, },
+  Listable: ListableScreen,
 }
 
 const SongStacks = createStackNavigator({
-  Musics: {screen: SongsTab},
+  Musics: SongsTab,
   ...common,
 },{ defaultNavigationOptions })
 
 const ArtistStacks = createStackNavigator({
-  Artists: {screen: ArtistsTab},
+  Artists: ArtistsTab,
   ...common,
 },{ defaultNavigationOptions })
 
 const AlbumStacks = createStackNavigator({
-  Albums: {screen: AlbumsTab},
+  Albums: AlbumsTab,
   ...common,
 },{ defaultNavigationOptions })
 
 const PlaylistStacks = createStackNavigator({
-  Playlists: {screen: PlaylistsTab},
+  Playlists: PlaylistsTab,
   ...common,
 },{ defaultNavigationOptions })
 
 const GenreStacks = createStackNavigator({
-  Genres: {screen: GenresTab},
+  Genres: GenresTab,
   ...common,
 },{ defaultNavigationOptions })
 
 const RatingStacks = createStackNavigator({
-  Ratings: {screen: RatingsTab},
+  Ratings: RatingsTab,
   ...common,
 },{ defaultNavigationOptions })
 

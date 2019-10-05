@@ -14,10 +14,6 @@ import { Text,
  import Album from '../../components/music/Album';
  import color from '../../constants/Colors';
 
-// import { Audio, Asset } from 'expo';
-//  import { FileSystem } from 'expo-file-system';
-// import artist from "../../func/music/artist";
-
 class AlbumsTab extends PureComponent {
    constructor(props){
      super(props)
@@ -36,22 +32,25 @@ class AlbumsTab extends PureComponent {
      }, 2000)
    }
 
-   // componentWillMount = () => {
-    // console.log('artist');
-   // }
-
-   static getDerivedStateFromProps = (next, last) => {
-     if (last !== next) {
-       // this.setState(prev => (
+   static getDerivedStateFromProps = (p, s) => {
+     if (s.albums !== p.album.albums || p.loading !== s.refreshing) {
        return {
-         ...next.album,
-         refreshing: next.loading
+         ...p.album,
+         refreshing: p.loading
        }
-       // }))
      }
      return null
-     // console.log(last, next);
    }
+
+   Album = ({item, index}) => (
+     <Album
+      artist={item.artist}
+      rating={item.rating} index={index}
+      genreCount={item.genreCount}
+      songCount={item.musicCount}
+      title={item.title} cover={item.cover}
+      style={{ }} />
+   )
 
    render(){
     const { albums } = this.state
@@ -59,8 +58,6 @@ class AlbumsTab extends PureComponent {
     return (
       <View style={styles.container}>
         <FlatList
-          shouldItemUpdate={(props,nextProps)=>
-          { console.log(props,nextProps); return props.item!==nextProps.item}}
           keyExtractor={(item, index) => `${index}`}
           data={albums}
           disableVirtualization={false}
@@ -70,7 +67,7 @@ class AlbumsTab extends PureComponent {
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />}
-          renderItem={({item, index}) => (<Album artist={item.artist} rating={item.rating} index={index} genreCount={item.genreCount} songCount={item.musicCount} title={item.title} cover={item.cover} style={{ }} />)}
+          renderItem={this.Album}
           contentContainerStyle={styles.contentContainer} />
       </View>
     )

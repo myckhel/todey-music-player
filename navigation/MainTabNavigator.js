@@ -36,7 +36,7 @@ const MainStack = createStackNavigator({
   Online: Online,
   Settings: Settings,
   About: About,
-  Playing: {screen: PlayingScreen },
+  Playing: PlayingScreen,
 }, {
   defaultNavigationOptions: ({navigation}) => ({
     headerStyle: {
