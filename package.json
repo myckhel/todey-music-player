@@ -17,7 +17,7 @@
     "react-native-get-music-files": "https://github.com/cinder92/react-native-get-music-files#master",
     "react-native-permissions": "^1.2.0",
     "react-native-popover-view": "^2.0.4",
-    "react-native-reanimated": "^1.2.0",
+    "react-native-reanimated": "^2.10.0",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^4.0.5",
     "react-navigation-drawer": "^2.2.1",
